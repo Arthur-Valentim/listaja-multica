@@ -19,7 +19,8 @@ function App() {
 
     try {
       return JSON.parse(savedTasks) as Task[]
-    } catch {
+    } catch (error) {
+      console.error('Erro ao carregar tarefas do localStorage:', error)
       return []
     }
   })
