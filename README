@@ -1,1 +1,59 @@
-# ListaJá
+O **ListaJá** é uma aplicação de gerenciamento de tarefas (*TODO List*) desenvolvida em **React**, **Vite** e **TypeScript**. O desenvolvimento foi conduzido através da plataforma **Multica**, utilizando um fluxo de trabalho orientado a agentes de IA para codificação e revisão automatizada.
+
+---
+
+## 👥 Integrantes do Grupo
+
+* Arthur Valentim
+* Caio Chiabai
+* Murilo Dias
+
+---
+
+## 🚀 Passos do Desenvolvimento
+
+O desenvolvimento da aplicação foi dividido em três etapas principais executadas em conjunto com os agentes **Engineer** (construção) e **Reviewer** (qualidade e validação):
+
+1. **Estrutura Base e Criação de Tarefas (`TODO-1`)**
+   * Inicialização do repositório e configuração da estrutura React com Vite e TypeScript.
+   * Desenvolvimento dos componentes de interface e da lógica inicial de criação e armazenamento de tarefas no `localStorage`.
+
+2. **Conclusão, Edição e Remoção de Tarefas (`TODO-2`)**
+   * Expansão para o CRUD completo: alteração de status (concluída/pendente), edição de títulos e remoção de tarefas.
+   * Persistência atualizada em tempo real para manter o estado sincronizado no navegador.
+
+3. **Tratamento de Erros e Resiliência (`TODO-3`)**
+   * Criação prévia de testes unitários de regressão cobrindo cenários com dados inválidos ou corrompidos.
+   * Implementação de captura de erro na leitura do `localStorage` para evitar que a aplicação quebre ao encontrar um JSON malformatado, inicializando a lista vazia e registrando o log no console.
+
+4. **Padronização da Esteira dos Agentes de IA**
+   * Consolidação de diretrizes operacionais no perfil do agente **Engineer** via `multica agent update`.
+   * Definição da execução obrigatória dos comandos de linter (`npm run lint`), build (`npm run build`) e testes (`npm test`) como pré-requisitos antes da abertura de qualquer Pull Request.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+* **Front-end:** React, TypeScript, Vite
+* **Orquestração de Agentes:** Multica
+* **Executores de IA:** OpenCode (Google Gemini API) e GitHub Copilot CLI
+
+---
+
+## 💻 Como Executar o Projeto
+
+```bash
+# Instalar as dependências
+npm install
+
+# Executar em ambiente de desenvolvimento
+npm run dev
+
+# Executar a suíte de testes
+npm test
+
+# Executar o linter
+npm run lint
+
+# Gerar o build de produção
+npm run build
