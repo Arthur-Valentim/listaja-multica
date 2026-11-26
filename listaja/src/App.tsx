@@ -4,7 +4,7 @@ import './App.css'
 type Task = {
   id: string
   title: string
-  status: 'pending'
+  status: 'pending' | 'completed'
 }
 
 const STORAGE_KEY = 'listaja.tasks'
@@ -25,6 +25,14 @@ function App() {
   })
   const [title, setTitle] = useState('')
   const [error, setError] = useState('')
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editingTitle, setEditingTitle] = useState('')
+  const [editError, setEditError] = useState('')
+
+  const saveTasks = (nextTasks: Task[]) => {
+    setTasks(nextTasks)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextTasks))
+  }
 
   const addTask = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -44,10 +52,62 @@ function App() {
       },
     ]
 
-    setTasks(nextTasks)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextTasks))
+    saveTasks(nextTasks)
     setTitle('')
     setError('')
+  }
+
+  const toggleTask = (taskId: string) => {
+    const nextTasks = tasks.map((task) =>
+      task.id === taskId
+        ? {
+            ...task,
+            status: task.status === 'completed' ? ('pending' as const) : ('completed' as const),
+          }
+        : task,
+    )
+    saveTasks(nextTasks)
+  }
+
+  const startEditing = (task: Task) => {
+    setEditingId(task.id)
+    setEditingTitle(task.title)
+    setEditError('')
+  }
+
+  const cancelEditing = () => {
+    setEditingId(null)
+    setEditingTitle('')
+    setEditError('')
+  }
+
+  const saveEditing = (event: FormEvent<HTMLFormElement>, taskId: string) => {
+    event.preventDefault()
+    const trimmedTitle = editingTitle.trim()
+
+    if (!trimmedTitle) {
+      setEditError('Digite o título da tarefa.')
+      return
+    }
+
+    const nextTasks = tasks.map((task) =>
+      task.id === taskId ? { ...task, title: trimmedTitle } : task,
+    )
+    saveTasks(nextTasks)
+    cancelEditing()
+  }
+
+  const removeTask = (task: Task) => {
+    if (!window.confirm(`Remover a tarefa "${task.title}"?`)) {
+      return
+    }
+
+    const nextTasks = tasks.filter((item) => item.id !== task.id)
+    saveTasks(nextTasks)
+
+    if (editingId === task.id) {
+      cancelEditing()
+    }
   }
 
   return (
@@ -81,9 +141,78 @@ function App() {
       ) : (
         <ul className="task-list" aria-label="Lista de tarefas">
           {tasks.map((task) => (
-            <li className="task-item" key={task.id}>
-              <span>{task.title}</span>
-              <span className="task-status">Pendente</span>
+            <li
+              className={`task-item${task.status === 'completed' ? ' task-item--completed' : ''}`}
+              key={task.id}
+            >
+              {editingId === task.id ? (
+                <form
+                  className="task-edit-form"
+                  onSubmit={(event) => saveEditing(event, task.id)}
+                >
+                  <input
+                    aria-label={`Editar tarefa ${task.title}`}
+                    type="text"
+                    value={editingTitle}
+                    onChange={(event) => {
+                      setEditingTitle(event.target.value)
+                      if (editError) setEditError('')
+                    }}
+                    autoFocus
+                  />
+                  <div className="task-actions">
+                    <button type="submit" className="task-action task-action--primary">
+                      Salvar
+                    </button>
+                    <button type="button" className="task-action" onClick={cancelEditing}>
+                      Cancelar
+                    </button>
+                  </div>
+                  {editError && (
+                    <p className="task-error" role="alert">
+                      {editError}
+                    </p>
+                  )}
+                </form>
+              ) : (
+                <>
+                  <label className="task-content">
+                    <input
+                      className="task-checkbox"
+                      type="checkbox"
+                      checked={task.status === 'completed'}
+                      onChange={() => toggleTask(task.id)}
+                      aria-label={
+                        task.status === 'completed'
+                          ? `Marcar ${task.title} como pendente`
+                          : `Concluir ${task.title}`
+                      }
+                    />
+                    <span className="task-title">{task.title}</span>
+                  </label>
+                  <div className="task-actions">
+                    <span
+                      className={`task-status${task.status === 'completed' ? ' task-status--completed' : ''}`}
+                    >
+                      {task.status === 'completed' ? 'Concluída' : 'Pendente'}
+                    </span>
+                    <button
+                      type="button"
+                      className="task-action"
+                      onClick={() => startEditing(task)}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      type="button"
+                      className="task-action task-action--remove"
+                      onClick={() => removeTask(task)}
+                    >
+                      Remover
+                    </button>
+                  </div>
+                </>
+              )}
             </li>
           ))}
         </ul>
