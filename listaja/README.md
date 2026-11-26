@@ -1,32 +1,46 @@
-# React + TypeScript + Vite
+# ListaJá
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Aplicação web de gerenciamento de tarefas criada com React, TypeScript e Vite.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Criar tarefas;
+- marcar tarefas como concluídas ou pendentes;
+- editar títulos;
+- remover tarefas com confirmação;
+- manter os dados no `localStorage`;
+- recuperar-se de dados inválidos armazenados no navegador.
 
-## React Compiler
+## Executar
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Pré-requisitos: Node.js e npm.
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+A aplicação será exibida no endereço informado pelo Vite no terminal, normalmente `http://localhost:5173`.
+
+## Scripts
+
+```bash
+npm test       # executa os testes
+npm run lint   # executa o linter
+npm run build  # gera o build de produção
+npm run preview # serve o build localmente
+```
+
+## Testes e validação
+
+O projeto utiliza Vitest, Testing Library e jsdom. Antes da entrega, execute:
+
+```bash
+npm test
+npm run lint
+npm run build
+```
+
+## Persistência
+
+As tarefas são armazenadas na chave `listaja.tasks` do `localStorage`. Se o conteúdo armazenado não puder ser interpretado como JSON, a aplicação registra o problema no console e começa com uma lista vazia.

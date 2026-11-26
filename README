@@ -1,61 +1,192 @@
 # ListaJá
 
-O **ListaJá** é uma aplicação de gerenciamento de tarefas (*TODO List*) desenvolvida em **React**, **Vite** e **TypeScript**. O desenvolvimento foi conduzido através da plataforma **Multica**, utilizando um fluxo de trabalho orientado a agentes de IA para codificação e revisão automatizada.
+O **ListaJá** é uma aplicação web de gerenciamento de tarefas desenvolvida com **React**, **TypeScript** e **Vite**. A interface permite criar, consultar, editar, concluir e remover tarefas, com persistência automática no navegador.
+
+O projeto foi desenvolvido por Arthur Valentim, Caio Chiabai e Murilo Dias como parte de uma atividade colaborativa utilizando a plataforma **Multica** e agentes de inteligência artificial para implementação e revisão de código.
 
 ---
 
-## 👥 Integrantes do Grupo
+## Funcionalidades
 
-* Arthur Valentim
-* Caio Chiabai
-* Murilo Dias
+- Adicionar tarefas com títulos personalizados.
+- Impedir o cadastro de tarefas vazias.
+- Marcar tarefas como pendentes ou concluídas.
+- Editar o título de uma tarefa existente.
+- Cancelar uma edição em andamento.
+- Remover tarefas com confirmação antes da exclusão.
+- Exibir automaticamente o estado vazio quando não há tarefas.
+- Persistir os dados no `localStorage` do navegador.
+- Recuperar a aplicação com uma lista vazia caso os dados armazenados estejam corrompidos.
 
----
-
-## 🚀 Passos do Desenvolvimento
-
-O desenvolvimento da aplicação foi dividido em três etapas principais executadas em conjunto com os agentes **Engineer** (construção) e **Reviewer** (qualidade e validação):
-
-1. **Estrutura Base e Criação de Tarefas (`TODO-1`)**
-   * Inicialização do repositório e configuração da estrutura React com Vite e TypeScript.
-   * Desenvolvimento dos componentes de interface e da lógica inicial de criação e armazenamento de tarefas no `localStorage`.
-
-2. **Conclusão, Edição e Remoção de Tarefas (`TODO-2`)**
-   * Expansão para o CRUD completo: alteração de status (concluída/pendente), edição de títulos e remoção de tarefas.
-   * Persistência atualizada em tempo real para manter o estado sincronizado no navegador.
-
-3. **Tratamento de Erros e Resiliência (`TODO-3`)**
-   * Criação prévia de testes unitários de regressão cobrindo cenários com dados inválidos ou corrompidos.
-   * Implementação de captura de erro na leitura do `localStorage` para evitar que a aplicação quebre ao encontrar um JSON malformatado, inicializando a lista vazia e registrando o log no console.
-
-4. **Padronização da Esteira dos Agentes de IA**
-   * Consolidação de diretrizes operacionais no perfil do agente **Engineer** via `multica agent update`.
-   * Definição da execução obrigatória dos comandos de linter (`npm run lint`), build (`npm run build`) e testes (`npm test`) como pré-requisitos antes da abertura de qualquer Pull Request.
+O armazenamento é realizado na chave `listaja.tasks`, com os dados mantidos no próprio navegador. Não é necessário configurar banco de dados ou serviços externos.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias utilizadas
 
-* **Front-end:** React, TypeScript, Vite
-* **Orquestração de Agentes:** Multica
-* **Executores de IA:** OpenCode (Google Gemini API) e GitHub Copilot CLI
+### Aplicação
+
+- [React](https://react.dev/) 19
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vite.dev/)
+- [CSS](https://developer.mozilla.org/docs/Web/CSS)
+
+### Testes e qualidade
+
+- [Vitest](https://vitest.dev/)
+- [Testing Library](https://testing-library.com/)
+- [jsdom](https://github.com/jsdom/jsdom)
+- [Oxlint](https://oxc.rs/docs/guide/usage/linter)
+
+### Desenvolvimento colaborativo
+
+- Multica
+- OpenCode com Google Gemini API
+- GitHub Copilot CLI
 
 ---
 
-## 💻 Como Executar o Projeto
+## Estrutura do repositório
+
+```text
+listaja-multica/
+├── README
+└── listaja/
+    ├── public/
+    ├── src/
+    │   ├── App.test.tsx
+    │   ├── App.tsx
+    │   ├── App.css
+    │   ├── index.css
+    │   └── main.tsx
+    ├── index.html
+    ├── package.json
+    └── package-lock.json
+```
+
+- `src/App.tsx`: contém o componente principal e a lógica de gerenciamento das tarefas.
+- `src/App.css`: contém os estilos específicos da interface.
+- `src/index.css`: contém os estilos globais da aplicação.
+- `src/App.test.tsx`: contém os testes automatizados do componente.
+- `src/main.tsx`: inicializa o React e monta a aplicação no documento HTML.
+
+---
+
+## Pré-requisitos
+
+Antes de iniciar, instale:
+
+- Node.js
+- npm, que normalmente é instalado junto com o Node.js
+
+Para verificar as instalações:
 
 ```bash
-# Instalar as dependências
+node --version
+npm --version
+```
+
+---
+
+## Como executar localmente
+
+No Windows, abra o terminal na raiz do projeto `listaja-multica` e execute:
+
+```bash
+cd listaja
 npm install
-
-# Executar em ambiente de desenvolvimento
 npm run dev
+```
 
-# Executar a suíte de testes
+O Vite exibirá no terminal o endereço local da aplicação, normalmente:
+
+```text
+http://localhost:5173
+```
+
+---
+
+## Scripts disponíveis
+
+Execute os comandos dentro da pasta `listaja`:
+
+| Comando | Finalidade |
+|---|---|
+| `npm run dev` | Inicia o servidor de desenvolvimento com atualização automática |
+| `npm test` | Executa a suíte de testes uma única vez |
+| `npm run lint` | Verifica problemas de estilo e qualidade com Oxlint |
+| `npm run build` | Executa a verificação TypeScript e gera o build de produção |
+| `npm run preview` | Serve localmente o build gerado pela aplicação |
+
+Exemplo de validação completa:
+
+```bash
 npm test
-
-# Executar o linter
 npm run lint
-
-# Gerar o build de produção
 npm run build
+```
+
+---
+
+## Comportamento de dados
+
+Cada tarefa possui os seguintes campos:
+
+```ts
+type Task = {
+  id: string
+  title: string
+  status: 'pending' | 'completed'
+}
+```
+
+Os identificadores são gerados pelo navegador com `crypto.randomUUID()`. Sempre que uma tarefa é criada, alterada ou removida, a nova lista é salva em `localStorage`.
+
+Caso a aplicação encontre JSON inválido na chave `listaja.tasks`, ela registra o erro no console e inicia com uma lista vazia, evitando que a página seja interrompida por dados corrompidos.
+
+---
+
+## Processo de desenvolvimento com agentes
+
+O desenvolvimento foi organizado em tarefas independentes e revisadas por agentes de IA:
+
+1. **TODO-1 — Estrutura e criação**
+   - Configuração inicial de React, Vite e TypeScript.
+   - Implementação da interface base e criação de tarefas.
+   - Persistência inicial no `localStorage`.
+
+2. **TODO-2 — CRUD completo**
+   - Implementação de conclusão, edição e remoção.
+   - Validação de títulos vazios.
+   - Confirmação antes da remoção.
+
+3. **TODO-3 — Resiliência e regressão**
+   - Criação de teste para dados JSON inválidos.
+   - Tratamento de erro na leitura inicial do `localStorage`.
+   - Registro da falha no console sem interromper a aplicação.
+
+4. **Padronização da revisão**
+   - Definição de lint, testes e build como verificações obrigatórias.
+   - Uso do agente Reviewer para avaliar alterações antes da entrega.
+
+---
+
+## Validação antes da entrega
+
+Antes de criar ou atualizar uma Pull Request, execute dentro da pasta `listaja`:
+
+```bash
+npm test
+npm run lint
+npm run build
+```
+
+Todas as verificações devem ser concluídas sem erros.
+
+---
+
+## Integrantes
+
+- Arthur Valentim
+- Caio Chiabai
+- Murilo Dias
